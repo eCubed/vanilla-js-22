@@ -1,0 +1,19 @@
+#game-board {
+  position: relative;
+  width: 304px;
+  height: 304px;
+  background-color: black;
+}
+
+.tile {
+  position: absolute;
+  height: 100px;
+  width: 100px;
+  background-color: white;
+  color: black;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 300%;
+}
