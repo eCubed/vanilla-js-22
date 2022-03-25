@@ -19,6 +19,10 @@ const displayTemperature = () => {
   document.getElementById('temperature').innerText = (unit === 'F') 
     ? `${kelvinToFahrenheit(temperatureInKelvins)}°F`
     : `${kelvinToCelsius(temperatureInKelvins)}°C`
+
+  document.getElementById('unit-toggler').innerText = (unit === 'F')
+    ? 'to Celsius'
+    : 'to Fahrenheit'
 }
 
 const displayWeather = (data) => {

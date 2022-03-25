@@ -1,0 +1,14 @@
+#click-area {
+  background-color: lightblue;
+  width: 100px;
+  height: 100px;
+  font-size: 300%;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+#timer-display {
+  font-size: 150%;
+}
