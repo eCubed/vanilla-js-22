@@ -1,0 +1,19 @@
+<html>
+  <head>
+    <link rel="stylesheet" href="./weather.css">
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+  </head>
+  <body>
+    <script type="module" src="./weather.js"></script>
+    <div id="display">
+      <h1 id="city"></h1>
+      <img id="icon" />
+      <div id="temperature"></div>
+      <button id="unit-toggler" type="button">Toggle Unit</button> 
+    </div>
+    <div id="pending-message">
+      Please wait. You may need to grant permission to access geolocation.
+      <button id="get-weather-button" type="button">Get Weather</button>
+    </div>
+  </body>
+</html>

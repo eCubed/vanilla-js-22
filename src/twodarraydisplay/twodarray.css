@@ -1,0 +1,14 @@
+#grid {
+  position: relative;
+  width: 600px;
+  height: 500px;
+}
+
+.grid-item {
+  position: absolute;
+  width: 100px;
+  height: 100px;
+  box-sizing: border-box;
+  border: solid 1px #111;
+  padding: 5px;
+}
