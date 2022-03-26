@@ -7,19 +7,24 @@ setupPanel('panel-parent', 'Title of My Panel', null, () => {
 })
 
 setupPanel('panel-parent', 'Second Panel',
-  (title, getIsExpanded, toggleExpanded) => {
+  (renderItemArgs) => {
     const customHeader = document.createElement(`div`)
-
+    
     const togglerA = document.createElement('a')
     togglerA.addEventListener('click', () => { 
-      toggleExpanded()
-      togglerA.innerText = getIsExpanded() ? 'Contract' : 'Expand'
+      renderItemArgs.toggleExpanded()      
     })
-    togglerA.innerText = getIsExpanded() ? 'Contract' : 'Expand'
+
+    renderItemArgs.expandedChanged = (isExpanded) => {
+      console.log(`expandedHander....`)
+      togglerA.innerText = isExpanded ? 'Contract' : 'Expand'
+    }
+
+    console.log(`Just finished setting onExpandedChanged`)
     customHeader.appendChild(togglerA)
 
     const titleSpan = document.createElement('span')
-    titleSpan.innerText = title
+    titleSpan.innerText = renderItemArgs.title
     customHeader.appendChild(titleSpan)
 
     return customHeader

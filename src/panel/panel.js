@@ -1,4 +1,10 @@
 export const setupPanel = (panelParentId, title, renderHeading, renderContent) => {
+  let _renderHeadingArgs = {
+    expandedChanged: null,
+    toggleExpanded: null,
+    title: title
+  }
+  
   const panelParent = document.getElementById(panelParentId)
   const content = renderContent()
 
@@ -6,11 +12,10 @@ export const setupPanel = (panelParentId, title, renderHeading, renderContent) =
   const toggleExpanded = () => {
     isExpanded = !isExpanded    
     isExpanded ? panel.appendChild(content) : panel.removeChild(content)
+    _renderHeadingArgs.expandedChanged?.call(this, isExpanded)
   }
+  _renderHeadingArgs.toggleExpanded = toggleExpanded
 
-  const getIsExpanded = () => {
-    return isExpanded
-  }
 
   const panel = document.createElement('div')
 
@@ -26,9 +31,10 @@ export const setupPanel = (panelParentId, title, renderHeading, renderContent) =
     })
     heading.appendChild(toggleButton)    
     panel.appendChild(heading)
-  } else {
-    console.log(`There is a custom renderHeading function`)
-    panel.appendChild(renderHeading(title, getIsExpanded, toggleExpanded))
+  } else {    
+    panel.appendChild(renderHeading(_renderHeadingArgs))
+    console.log(_renderHeadingArgs.expandedChanged)
+    _renderHeadingArgs.expandedChanged?.call(this, isExpanded)
   }
  
   panel.appendChild(content)
