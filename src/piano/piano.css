@@ -1,0 +1,24 @@
+#keyboard {
+  position: relative;
+}
+
+.key {
+  position: absolute;
+  width: 40px;
+  height: 140px;
+  border: solid 1px black;
+  box-sizing: border-box;
+  
+}
+
+.key:hover,
+.key.black:hover {
+  background-color: lightcoral;
+}
+
+.key.black {
+  height: 90px;
+  width: 20px;
+  background-color: black;
+  z-index: 5;
+}
