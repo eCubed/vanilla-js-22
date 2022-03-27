@@ -1,3 +1,9 @@
+#game-board {
+  display: flex;
+  flex-direction: row;
+  gap: 2em;
+}
+
 #grid {
   position: relative;
   background-color: goldenrod
@@ -8,9 +14,43 @@
   background-color: white;
   border: solid 1px #eee;
   box-sizing: border-box;
+  
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .edge {
   position: absolute;
   background-color: bisque;
+  cursor: pointer;
 }
+
+.edge:hover {
+  background-color:rgb(255, 249, 162);
+}
+
+#scoreboard {
+  padding: 1em;
+  background-color: mediumblue;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5em;
+}
+
+.player-entry {
+  display: grid;
+  grid-template-columns: 3fr 1fr;
+  gap: 0.5em;
+  box-sizing: border-box;
+}
+
+.player-entry > * {
+  padding: 1em;
+  background-color: white;
+}
+
+button {
+  padding: 1em;
+}
+
