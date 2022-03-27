@@ -1,0 +1,16 @@
+#grid {
+  position: relative;
+  background-color: goldenrod
+}
+
+.cell {
+  position: absolute;
+  background-color: white;
+  border: solid 1px #eee;
+  box-sizing: border-box;
+}
+
+.edge {
+  position: absolute;
+  background-color: bisque;
+}
