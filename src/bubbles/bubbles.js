@@ -1,4 +1,5 @@
-import { generateRandomDecimalNumberInclusive } from './utils.js'
+import { generateRandomDecimalNumberInclusive } from '../utils/utils.js'
+import { setupCanvas } from '../utils/setupcanvas.js'
 
 const CANVAS_W = 1000
 const CANVAS_H = 1000
@@ -11,12 +12,11 @@ let animationId
 
 const bubbles = []
 
-const colors = ['#990000', '#009900', '#000099']
+const colors = ['#990000', '#009900', '#000099', '#ccffaa', '#999900', '#009999']
 
-const canvas = document.getElementById('canvas')
-const canvasContext = canvas.getContext('2d')
+const canvasContext = setupCanvas('canvas', 1000, 600)
 
-const generateRandomColor = () => colors[Math.floor(Math.random() * (4))]
+const generateRandomColor = () => colors[Math.floor(Math.random() * (colors.length))]
 
 const manageBubbleRegeneration = (bubble) => {
   // if bubble goes off-canvas
@@ -25,16 +25,20 @@ const manageBubbleRegeneration = (bubble) => {
       bubble.y + bubble.r < 0 || bubble.y - bubble.r > CANVAS_H) {
     
     const index = bubbles.indexOf(bubble)
-    if (index > -1) {
-      bubbles.splice(index, 1)
-    }
-
-    // Generate a new bubble to replace it
-    bubbles.push(generateReplacementBubble())
+    bubbles[index] = generateReplacementBubble()
   }
 
   // console.log(bubbles.length)
 }
+
+const changeVelocity = (bubble) => {
+  const willChangeX = Math.random() <= 0.01
+  const willChangeY = Math.random() <= 0.01
+  
+  if (willChangeX) bubble.dx = -1 * bubble.dx
+  if (willChangeY) bubble.dy = -1 * bubble.dy
+
+} 
 
 const drawFrame = () => {
   canvasContext.clearRect(0, 0, CANVAS_W, CANVAS_H)
@@ -43,6 +47,10 @@ const drawFrame = () => {
     canvasContext.beginPath()
     canvasContext.arc(bubble.x, bubble.y, bubble.r, 0, 2 * Math.PI)
     canvasContext.fill()
+
+    /* Randomly change bubble's velocity (magnitude still the same)
+    */
+    changeVelocity(bubble)
     
     // change position!
     bubble.x += bubble.dx
