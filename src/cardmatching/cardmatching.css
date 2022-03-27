@@ -1,0 +1,16 @@
+#table-top {
+  padding: 1em;
+  background-color:cornflowerblue;
+  display: flex;
+  flex-direction: row;
+  gap: 1em;
+}
+
+.card {
+  width: 130px;
+  height: 200px;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
