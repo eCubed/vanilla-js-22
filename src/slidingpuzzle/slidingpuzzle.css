@@ -1,0 +1,14 @@
+#sliding-puzzle {
+  position: relative;
+  background-color: #4d9999;
+}
+
+.tile {
+  position: absolute;
+  background-color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-sizing: border-box;
+  border: solid 1px #bbb;
+}
