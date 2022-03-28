@@ -11,4 +11,5 @@
   align-items: center;
   box-sizing: border-box;
   border: solid 1px #bbb;
+  cursor: pointer;
 }

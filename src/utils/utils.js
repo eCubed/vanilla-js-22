@@ -56,5 +56,14 @@ export const chooseRandomDistinctItemsFromArray = (array, howMany) => {
     })
     return chosenItems
   }
-  
+}
+
+export const chooseRandomItemFromArray = (array) => {
+  if (array === null)
+    return null
+  if (array.length === 1)
+    return array[0]
+
+  const randomIndex = generateRandomIntegerInclusive(0, array.length - 1)
+  return array[randomIndex]
 }
