@@ -1,0 +1,15 @@
+#grid {
+  position: relative;
+  background-color: #ccc;
+}
+
+.cell {
+  position: absolute;
+  background-color: white;
+  box-sizing: border-box;
+  border: solid 1px #eee;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
