@@ -1,0 +1,15 @@
+#drawing-board {
+  position: relative;
+  background-color: #ccc;
+  width: 640px;
+  height: 480px;
+}
+
+#square {
+  position: absolute;
+  width: 100px;
+  height: 100px;
+  background-color: cornflowerblue;
+  top: 0;
+  left: 0;
+}

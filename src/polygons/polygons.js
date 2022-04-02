@@ -1,6 +1,6 @@
 import { HSLToHex, hueShiftHex } from '../utils/colortools.js';
 import { setupCanvas } from '../utils/setupcanvas.js';
-import { generateRandomDecimalNumberInclusive } from '../utils/utils.js';
+import { generateRandomDecimalNumberInclusive } from '../utils/randomutils.js';
 
 const CANVAS_W = 800
 const CANVAS_H = 500
