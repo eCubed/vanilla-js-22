@@ -1,34 +1,42 @@
-const toEasingDomain = (v, a, b) => (v - b) / (b - a) + 1
-const fromEasingDomain = (ev, a, b) => (ev - 1) * (b - a) + b
+import { getEasedValueAtTime, linear, quadEaseIn, quadEaseOut, cubicEaseInOut } from '../utils/easingtools.js'
 
-export const getEasedValue = (v, a, b, easingFunction) => {
-  const easingDomain = toEasingDomain(v, a, b)
-  const easingRange = easingFunction(easingDomain)
-  return fromEasingDomain(easingRange, a, b)
+const MAX_TIME_MS = 1000;
+let currentTimeMs = 0
+
+const resetButton = document.getElementById('reset-button')
+
+resetButton.addEventListener('click', () => {
+  reset()
+})
+
+// I'm going to animate!
+let animationHandle
+
+const linearDiv = document.getElementById('linear-div')
+const quadEaseInDiv = document.getElementById('quad-ease-in-div')
+const quadEaseOutDiv = document.getElementById('quad-ease-out-div')
+const cubicEaseInOutDiv = document.getElementById('cubic-ease-in-out-div')
+
+const reset = () => {
+  linearDiv.style.left = '0'
+  quadEaseInDiv.style.left = '0'
+  currentTimeMs = 0
+  animate()
 }
 
-export const getEasedValueAtTime = (tv, maxTime, a, b, easingFunction) => {
-  const easingDomainBasedOnTime = fromEasingDomain(tv / maxTime, 0, maxTime)
-  const easingRangeBasedOnTime = easingFunction(easingDomainBasedOnTime)
-  return fromEasingDomain(easingRangeBasedOnTime, a, b)
-
+const animate = () => {
+  if (currentTimeMs <= MAX_TIME_MS) {
+    const linearEaseValue = getEasedValueAtTime(currentTimeMs, MAX_TIME_MS, 0, 500, linear)
+    const quadEaseInValue = getEasedValueAtTime(currentTimeMs, MAX_TIME_MS, 0, 500, quadEaseIn)
+    const quadEaseOutValue = getEasedValueAtTime(currentTimeMs, MAX_TIME_MS, 0, 500, quadEaseOut)
+    const cubicEaseInOutValue = getEasedValueAtTime(currentTimeMs, MAX_TIME_MS, 0, 500, cubicEaseInOut)
+    linearDiv.style.left = `${linearEaseValue}px`
+    quadEaseInDiv.style.left = `${quadEaseInValue}px`
+    quadEaseOutDiv.style.left = `${quadEaseOutValue}px`
+    cubicEaseInOutDiv.style.left = `${cubicEaseInOutValue}px`
+    currentTimeMs += 1000/60
+    animationHandle = requestAnimationFrame(animate)
+  }
 }
 
-const A = 500
-const B = 900
-
-const linearEasingFunction = (v) => v
-const quadraticEasingFunction = (v) => v * v
-const quadraticEaseOutFunction = (v) => v * (2 - v)
-const cubicEaseInOutFunction = (v) => -2*v*v*v + 3*v*v
-/*
-for (let v = A; v <= B; v += 10) {
-  console.log(`${v} -> ${getEasedValue(v, A, B, quadraticEasingFunction)}`)
-}
-*/
-
-const MAX_TIME = 1
-// Every millisecond
-for (let tv = 0; tv <= MAX_TIME; tv += 0.10) {
-  console.log(`${tv} -> ${getEasedValueAtTime(tv, MAX_TIME, A, B, cubicEaseInOutFunction)}`)
-}
+animate()

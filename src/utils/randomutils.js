@@ -61,3 +61,32 @@ export const generateRandomDecimalNumberInclusive = (min, max, decimalPlaces) =>
     const randomIndex = generateRandomIntegerInclusive(0, array.length - 1)
     return array[randomIndex]
   }
+
+  export const generateRandomPoints2D = (howMany, minX, maxX, minY, maxY) => {
+    const chosenAlreadyPoints = {}
+    const points = []
+
+    for(let c = 0; c < howMany; c++) {
+      let rx = generateRandomIntegerInclusive(minX, maxX)
+      let ry = generateRandomIntegerInclusive(minY, maxY)
+
+      while(chosenAlreadyPoints[`p-${rx}-${ry}`] !== undefined) {
+        rx = generateRandomIntegerInclusive(minX, maxX)
+        ry = generateRandomIntegerInclusive(minY, maxY)
+      }
+
+      chosenAlreadyPoints[`p-${rx}-${ry}`] = 'anything'
+      points.push({ x: rx, y: ry})
+    }
+
+    return points;
+  }
+
+  export const generateRandomPoints3D = (howMany, minX, maxX, minY, maxY, minZ, maxZ) => {
+    const random2DPoints = generateRandomPoints2D(howMany, minX, maxX, minY, maxY);
+    random2DPoints.forEach(r2d => {
+      r2d.z = generateRandomIntegerInclusive(minZ, maxZ)
+    })
+
+    return random2dPoinst
+  }
