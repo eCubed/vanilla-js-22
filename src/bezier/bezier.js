@@ -1,9 +1,9 @@
 import { generateRandomDecimalNumberInclusive, generateRandomIntegerInclusive, generateRandomPoints2D } from '../utils/randomutils.js';
-import { setupCanvas } from '../utils/setupcanvas.js'
+import { setupCanvas, drawPolygon } from '../utils/canvasutils.js'
 
 const CANVAS_W = 640
 const CANVAS_H = 480
-const T_INCR = 0.001
+const T_INCR = 0.01
 
 const canvasContext = setupCanvas('canvas', CANVAS_W, CANVAS_H);
 
@@ -26,19 +26,24 @@ export const generateNextRandomBezierSmooth = (currentBezier) => {
   const bezierHandles = []
   bezierHandles.push(currentBezier[3])
   
-  const dx = bezierFirstDerivative(1, currentBezier[0].x, currentBezier[1].x, currentBezier[2].x, currentBezier[3].x)
-  const dy = bezierFirstDerivative(1, currentBezier[0].y, currentBezier[1].y, currentBezier[2].y, currentBezier[3].y)
+  const dx = currentBezier[3].x - currentBezier[2].x
+  const dy = currentBezier[3].y - currentBezier[2].y
   console.log(`dx, dy: ${dx}, ${dy}`)
   
-  let newP1x = dx * generateRandomDecimalNumberInclusive(0, 0.5, 1) + currentBezier[3].x 
-  let newP1y = dy * generateRandomDecimalNumberInclusive(1, 0.5, 1) + currentBezier[3].y 
+  const tForD = generateRandomDecimalNumberInclusive(0.3, 0.6, 1)
+
+  let newP1x = dx * tForD + currentBezier[3].x 
+  let newP1y = dy * tForD + currentBezier[3].y 
   console.log(`initial newP1xy: ${newP1x}, ${newP1y}`)
   
+  /*
   while ((newP1x < 0 || newP1x > CANVAS_W) ||
         (newP1y < 0 || newP1y > CANVAS_H)) {
-    newP1x = dx * generateRandomDecimalNumberInclusive(0, 0.5, 1) + currentBezier[3].x 
-    newP1y = dy * generateRandomDecimalNumberInclusive(0, 0.5, 1) + currentBezier[3].y
+    const newTForD = generateRandomDecimalNumberInclusive(0.3, 0.6, 1)
+    newP1x = dx * newTForD + currentBezier[3].x 
+    newP1y = dy * newTForD + currentBezier[3].y
   }
+  */
   bezierHandles.push({
     x: newP1x,
     y: newP1y
@@ -54,20 +59,25 @@ export const generateNextRandomBezierSmooth = (currentBezier) => {
   return bezierHandles
 }
 
-const drawBezierPoints = (bezierPoints) => {
+
+
+const drawBezierCurve = (bezierPoints) => {
   
   canvasContext.beginPath()
-  canvasContext.moveTo(bezierPoints[0].x, bezierPoints[0].y)
-  for (let i = 1; i < bezierPoints.length; i++) {
-    canvasContext.lineTo(bezierPoints[i].x, bezierPoints[i].y)
-  }
-  canvasContext.stroke()
+  drawPolygon(canvasContext, bezierPoints, 'black')
 }
 
-const regenerate = () => {
-  canvasContext.clearRect(0, 0, CANVAS_W, CANVAS_H)
-  const handles = generateRandomPoints2D(4, 0, 640, 0, 480)
-  console.log(JSON.stringify(handles))
+const drawHandles = (handles) => {
+
+  drawPolygon(canvasContext, handles, '#009900')
+
+  canvasContext.fillStyle = '#990000'
+  handles.forEach(handle => {
+    canvasContext.fillRect(handle.x - 3, handle.y - 3, 6, 6)
+  })
+}
+
+const generateBezierPointsFromHandles = (handles) => {
   const bezierPoints = []
   for (let t = 0; t <= 1.00; t += T_INCR) {
     bezierPoints.push({
@@ -75,19 +85,25 @@ const regenerate = () => {
       y: bezier(t, handles[0].y, handles[1].y, handles[2].y, handles[3].y)
     })
   }
-  drawBezierPoints(bezierPoints)
-  const nextBezierHandles = generateNextRandomBezierSmooth(handles)
-  console.log('Next handles')
-  console.log(JSON.stringify(nextBezierHandles))
-  const nextHandleBezierPoints = []
-  for (let u = 0; u <= 1.00; u += T_INCR) {
-    nextHandleBezierPoints.push({
-      x: bezier(u, nextBezierHandles[0].x, nextBezierHandles[1].x, nextBezierHandles[2].x, nextBezierHandles[3].x),
-      y: bezier(u, nextBezierHandles[0].y, nextBezierHandles[1].y, nextBezierHandles[2].y, nextBezierHandles[3].y)
-    })
-  }
+  return bezierPoints
+}
 
-  drawBezierPoints(nextHandleBezierPoints)
+const drawBezier = (handles) => {
+  
+  console.log(JSON.stringify(handles))
+  const bezierPoints = generateBezierPointsFromHandles(handles)
+  drawBezierCurve(bezierPoints)
+  drawHandles(handles)
+}
+
+const regenerate = () => {
+  canvasContext.clearRect(0, 0, CANVAS_W, CANVAS_H)
+  const handles = generateRandomPoints2D(4, 0, 640, 0, 480)
+  drawBezier(handles)
+  
+  const nextBezierHandles = generateNextRandomBezierSmooth(handles)
+  drawBezier(nextBezierHandles)
+  
 }
 
 regenerate()
