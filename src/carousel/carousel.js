@@ -154,11 +154,11 @@ export const setupCarousel = (carouselId, array, viewerWidth, viewerHeight, item
 
 // SAMPLE USAGE
 setupCarousel('carousel', 
-['apple', 'banana', 'grape', 'orange', 'peach'], 
-400, 
-300,
-(item) => {
-  const div = document.createElement('div')
-  div.innerText = item
-  return div
-})
+  ['apple', 'banana', 'grape', 'orange', 'peach'], 
+  400, 
+  300,
+  (item) => {
+    const div = document.createElement('div')
+    div.innerText = item
+    return div
+  })
