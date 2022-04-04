@@ -62,13 +62,26 @@ export const setupCartesian = (canvasWidth, canvasHeight, minX, maxX, minY, maxY
     context2D.stroke()
   }
 
+  const drawParametric = (minT, maxT, xOfT, yOfT) => {
+    context2D.beginPath()
+    context2D.strokStyle = '#000099'
+    for (let t = minT; t <= maxT; t+=0.1) {
+      const screenX = convertCartesianXToScreenX(xOfT(t), minX, maxX, canvasWidth)
+      const screenY = convertCartesianYToScreenY(yOfT(t), minY, maxY, canvasHeight)
+      context2D.lineTo(screenX, screenY)
+    }
+    context2D.stroke()
+  }
+
   return {
-    drawFunction
+    drawFunction,
+    drawParametric
   }
 }
 
 // sample usage
-const { drawFunction } = setupCartesian(CANVAS_W, CANVAS_H, -10, 20, -10, 20)
+const { drawFunction, drawParametric } = setupCartesian(CANVAS_W, CANVAS_H, -10, 20, -10, 20)
 drawFunction((x) => -2*x + 1)
 drawFunction((x) => 5*Math.sin(x))
 drawFunction((x) => x*x*x )
+drawParametric(-5, 5, (t) => t*t, (t) => t)
