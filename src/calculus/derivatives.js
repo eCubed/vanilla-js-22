@@ -1,0 +1,1 @@
+export const computeSlopeAt = (x, deltaX, func) => (func(x + deltaX) - func(x))/deltaX
