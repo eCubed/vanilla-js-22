@@ -89,13 +89,69 @@ const linkedList = () => {
     return num
   }
 
+  const find = (key, getKeyValue) => {
+    return findNode(key, getKeyValue)?.data
+  }
+
+  const findNode = (key, getKeyValue) => {
+    let curr = head
+    while (curr != null) {
+      if (key === getKeyValue(curr.data)) {
+        break
+      }
+      curr = curr.next
+    }
+
+    return curr
+  }
+
+  const remove = (key, getKeyValue) => {
+    console.log(`To be removed key: ${key}`)
+    const toRemove = findNode(key, getKeyValue)
+    if (toRemove != null) {
+      if (toRemove === head) {
+        if (toRemove === tail) {
+          head = null
+          tail = null
+        } else {
+          console.log(`toRemove is head, but not tail`)
+          const newHead = toRemove.next
+          if (newHead != null) {
+            newHead.prev = null // no dangling refs
+          }
+          toRemove.next = null // no dangling refs
+          head = newHead
+          return toRemove.data
+        }
+      } else {
+        // toRemove is NOT head... it could be the tail!
+        const previousToToRemove = toRemove.prev // could be head, but it wouldn't matter
+        const nextToRemove = toRemove.next // could be tail, and we'll handle that
+
+        previousToToRemove.next = toRemove.next
+        if (nextToRemove != null) {
+          nextToRemove.prev = previousToToRemove
+        }
+
+        // undangle
+        toRemove.prev = null
+        toRemove.next = null
+        return toRemove.data
+      }
+    }
+
+    return null
+  }
+
   return {
     push,
     pop,
     unshift,
     shift,
     iterateItems,
-    count
+    count,
+    find,
+    remove
   }
 }
 
@@ -128,11 +184,10 @@ const lruCache = (masterList, limit, getKeyValue) => {
         unshift(itemFromMaster)        
       }
     } else {
-      /* if we found it in the hash.... it's on the linkedList.
-      */
+      // if we found it in the hash.... it's on the linkedList.
     }
 
-    if (limit < count()) {
+    if (count() > limit) {
       // We boot the last item in the linked list
       const poppedData = pop()
       // Now, delete the poppedData from the hash
@@ -163,14 +218,13 @@ const masterList = [
   { name: 'Bob', age: 63 },
   { name: 'Diane', age: 37 },
 ]
-
+/*
 const { access } = lruCache(masterList, 3, (item) => item.name)
 access('Paul')
 access('Mary')
+*/
 
-
-/*
-const { push, pop, iterateItems, shift, unshift, count } = linkedList()
+const { push, pop, iterateItems, shift, unshift, count, find, remove } = linkedList()
 
 push({ name: 'Paul', age: 29 })
 push({ name: 'Rhonda', age: 48 })
@@ -178,12 +232,24 @@ push({ name: 'Mike', age: 3})
 unshift({ name: 'Mary', age: 17})
 unshift({ name: 'Karl', age: 42})
 unshift({ name: 'Bob', age: 63})
+/*
 shift()
 pop()
-
+*/
 iterateItems((item) => {
   console.log(`Item visited: ${JSON.stringify(item)}`)
 })
 
+const found = find('Paul', (item) => item.name)
+console.log(`Found: ${JSON.stringify(found)}`)
+const itemThatShouldNotExist = find('Jane', (item) => item.name)
+console.log(`Should be null or undefined: ${JSON.stringify(itemThatShouldNotExist)}`)
+
+const removedItem = remove('Mike', item => item.name) // move mike to the top
+unshift(removedItem)
+iterateItems((item) => {
+  console.log(`Item visited: ${JSON.stringify(item)}`)
+})
+
+
 console.log(`there are ${count()} items in the list`)
-*/
