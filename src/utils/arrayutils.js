@@ -34,3 +34,21 @@ export const setupArrayViewer = (array) => {
     currentItemChanged
   }
 }
+
+export const getAdjacentCells = (twoDArray, r, c) => {
+  const adjacentCells = []
+  const totalRows = twoDArray.length
+  const totalCols = twoDArray[0].length
+
+  for (let j = r-1; j <= r+1; j++) {
+    for (let i = c-1; i <= c+1; i++) {
+      if ((0 <= j && j < totalRows) &&
+          (0 <= i && i < totalCols) &&
+          (j !== r || i !== c)){
+        adjacentCells.push(twoDArray[j][i])
+      }
+    }
+  }
+
+  return adjacentCells
+}
