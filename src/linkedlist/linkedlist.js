@@ -58,6 +58,7 @@ const linkedList = () => {
       } else {
         // not the head position.
         const toBePoppedData = tail.data
+        console.log(`To be popped: ${toBePoppedData.name}`)
         const previousOfCurrentTail = tail.prev
         tail.prev = null // no dangling
         previousOfCurrentTail.next = null
@@ -131,6 +132,8 @@ const linkedList = () => {
         previousToToRemove.next = toRemove.next
         if (nextToRemove != null) {
           nextToRemove.prev = previousToToRemove
+        } else {
+          tail = previousToToRemove
         }
 
         // undangle
@@ -173,7 +176,7 @@ console.log(`Rhonda after delete: ${JSON.stringify(hash['Rhonda'])}`)
 
 const lruCache = (masterList, limit, getKeyValue) => {
 
-  const { push, pop, unshift, count, iterateItems } = linkedList()
+  const { pop, unshift, count, iterateItems, remove } = linkedList()
   const hash = {}
 
   const access = (key) => {
@@ -185,6 +188,9 @@ const lruCache = (masterList, limit, getKeyValue) => {
       }
     } else {
       // if we found it in the hash.... it's on the linkedList.
+      const itemFoundInHash = remove(key, getKeyValue)
+      // Then we add it back to the front of the linked list
+      unshift(itemFoundInHash)
     }
 
     if (count() > limit) {
@@ -202,6 +208,8 @@ const lruCache = (masterList, limit, getKeyValue) => {
     for(const key of Object.keys(hash)) {
       console.log(`Hash: ${key}: ${JSON.stringify(hash[key])}`)
     }
+
+    console.log(`--------------------------------------------`)
   }
 
   return {
@@ -218,12 +226,23 @@ const masterList = [
   { name: 'Bob', age: 63 },
   { name: 'Diane', age: 37 },
 ]
-/*
+
 const { access } = lruCache(masterList, 3, (item) => item.name)
 access('Paul')
 access('Mary')
-*/
+access('Rhonda')
+// Test 1. Let's see if it will boot the last one - Paul. Yes. it did
+access('Bob')
+// Test 2. Let's see if it will move Rhonda to the top if I access her again. It did!
+access('Rhonda')
+// Test 3. Let's see if it will add Paul again to the top // but that booted mary!
+access('Paul')
+// Test 3. Let's see of Bob goes back to the top of the list
+access('Bob')
+// Test 4. Now let's add Karl. There should be a new item in the hash
+access('Karl')
 
+/*
 const { push, pop, iterateItems, shift, unshift, count, find, remove } = linkedList()
 
 push({ name: 'Paul', age: 29 })
@@ -232,10 +251,8 @@ push({ name: 'Mike', age: 3})
 unshift({ name: 'Mary', age: 17})
 unshift({ name: 'Karl', age: 42})
 unshift({ name: 'Bob', age: 63})
-/*
-shift()
-pop()
-*/
+
+
 iterateItems((item) => {
   console.log(`Item visited: ${JSON.stringify(item)}`)
 })
@@ -253,3 +270,4 @@ iterateItems((item) => {
 
 
 console.log(`there are ${count()} items in the list`)
+*/
