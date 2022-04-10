@@ -94,7 +94,7 @@ const convertKeyNumber88ToMidiNoteNumber = (keyNumber88) => keyNumber88 + 20
 
 const convertMidiNoteNumberToKeyNumber88 = (midiNoteNumber) => midiNoteNumber - 20
 
-const convertMidiNoteNumberToNoteName = (mindiNoteNumber) =>
+const convertMidiNoteNumberToNoteName = (midiNoteNumber) =>
   convertKeyNumber88ToNoteName(convertMidiNoteNumberToKeyNumber88(midiNoteNumber))
 
 const convertNoteNameToKeyNumber88 = (noteName) => {
