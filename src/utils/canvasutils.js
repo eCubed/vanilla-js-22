@@ -3,7 +3,7 @@ export const setupCanvas = (canvasId, width, height) => {
   canvas.width = width
   canvas.height = height
 
-  return canvas.getContext('2d')
+  return { canvasContext: canvas.getContext('2d'), canvas }
 }
 
 export const drawPolygon = (canvasCtx, points, color) => {

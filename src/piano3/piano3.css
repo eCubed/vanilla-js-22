@@ -1,0 +1,12 @@
+#keyboard {
+  background-color: #ccc;
+  position: relative;
+  display: flex;
+  flex-direction: row;
+}
+
+.key {
+  position: relative;
+  border: solid 1px black;
+  box-sizing: border-box;
+}

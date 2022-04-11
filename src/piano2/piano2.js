@@ -48,7 +48,7 @@ const renderKey = (noteNumber, pianoKeyDown, pianoKeyUp) => {
 
   keyDiv.style.backgroundColor = isBlackKey(noteNumber) ? 'black' : 'white'
   keyDiv.style.height = isBlackKey(noteNumber) ? `${KEY_HEIGHT * 2/3}px` : `${KEY_HEIGHT}`
-  keyDiv.style.marginLeft = isBlackKey(noteNumber) || isWhiteScoot(noteNumber) ?`${-1/4 * KEY_WIDTH}px`:  '0px'
+  keyDiv.style.marginLeft = isBlackKey(noteNumber) || isWhiteScoot(noteNumber) ? `${-1/4 * KEY_WIDTH}px`:  '0px'
   keyDiv.style.zIndex = isBlackKey(noteNumber) ? 10 : 1
   keyDiv.style.width = isBlackKey(noteNumber) ? `${KEY_WIDTH / 2}px` : `${KEY_WIDTH}px`
 
