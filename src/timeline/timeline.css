@@ -7,4 +7,6 @@
 
 .tick {
   position: absolute;
+  width: 1px;
+  background-color: black;
 }
