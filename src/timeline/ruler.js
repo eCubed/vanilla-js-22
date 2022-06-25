@@ -29,9 +29,24 @@ const calculateRulerMetrics = (widthPx, startMark, endMark, levels, minTickWidth
 const renderTickDiv = (leftPercent, level) => {
   const tickDiv = document.createElement('div');
   tickDiv.setAttribute('class', 'tick')
-  tickDiv.style.height = `${1/level * 20}px`
+  tickDiv.style.height = `${Math.pow(0.7, level) * 40}px`
   tickDiv.style.left = `${leftPercent}%`
   return tickDiv
+}
+
+const determineLevelToUse = (tick, minLevel, levels) => {
+  let acc = levels[minLevel]
+  let currLevel = minLevel
+  for (let i = minLevel; i > 0; i--) {
+    if (tick % acc == 0) {
+      currLevel--;
+      acc *= levels[i - 1]
+    } else {
+      break;
+    }
+  }
+
+  return currLevel
 }
 
 const renderRuler = (rulerDiv, widthPx, startMark, endMark, levels, minTickWidth) => {
@@ -40,12 +55,8 @@ const renderRuler = (rulerDiv, widthPx, startMark, endMark, levels, minTickWidth
   // console.log(JSON.stringify(rulerMetrics))
   for (let i = 0; i < rulerMetrics.totalNumTicks; i++) {
     // First let's render the ticks.
-    let levelToUse = rulerMetrics.minLevel
-    // let's figure out the level
-    if (i % rulerMetrics.numTicksPerUnit == 0) {
-      levelToUse -= 1
-    }
-
+    let levelToUse = determineLevelToUse(i, rulerMetrics.minLevel, levels)
+    
     const tickDiv = renderTickDiv(i * rulerMetrics.tickWidthPercent, levelToUse)
     rulerDiv.appendChild(tickDiv);
   }
@@ -53,6 +64,6 @@ const renderRuler = (rulerDiv, widthPx, startMark, endMark, levels, minTickWidth
 
 export const setupRuler = (rulerId, initialWidthPx, startMark, endMark, levels) => {
   const rulerDiv = document.getElementById(rulerId)
-  renderRuler(rulerDiv, initialWidthPx, startMark || 0, endMark || 2, levels || [1, 2, 2, 3], 10)
+  renderRuler(rulerDiv, initialWidthPx, startMark || 0, endMark || 3, levels || [1, 2, 2, 3], 10)
 
 }
