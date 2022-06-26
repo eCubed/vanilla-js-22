@@ -1,3 +1,9 @@
+#timeline-tracks {
+  width: 100%;
+  overflow-x: scroll;
+  background-color: #cccccc;
+}
+
 #ruler {
   position: relative;
   background-color: #eeeeee;

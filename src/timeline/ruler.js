@@ -55,8 +55,6 @@ const renderRuler = (rulerDiv, widthPx, startMark, endMark, levels, minTickWidth
   rulerDiv.style.width = `${widthPx || 500}px`
   const rulerMetrics = calculateRulerMetrics(widthPx || 500, startMark, endMark, levels, minTickWidth)
   
-  console.log(JSON.stringify(rulerMetrics))
-
   // clear the ruler!!!
   clearChildrenOfElement(rulerDiv)
 
