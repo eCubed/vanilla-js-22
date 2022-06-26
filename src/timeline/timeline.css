@@ -16,3 +16,10 @@
   width: 1px;
   background-color: black;
 }
+
+.track {
+  position: relative;
+  border-top: solid 1px #999999;
+  background-color: #aaaaff;
+  height: 80px;
+}

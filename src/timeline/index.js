@@ -1,7 +1,8 @@
 
 import { setupTimeline } from './timeline.js'
 
-setupTimeline('timeline')
+const { addTrack } = setupTimeline('timeline')
+addTrack()
 
 /*
 const { setRulerWidthPx } = setupRuler('ruler')

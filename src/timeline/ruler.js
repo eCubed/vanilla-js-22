@@ -31,7 +31,7 @@ const calculateRulerMetrics = (widthPx, startMark, endMark, levels, minTickWidth
 const renderTickDiv = (leftPercent, level) => {
   const tickDiv = document.createElement('div');
   tickDiv.setAttribute('class', 'tick')
-  tickDiv.style.height = `${Math.pow(0.7, level) * 40}px`
+  tickDiv.style.height = `${Math.pow(0.7, level) * 30}px`
   tickDiv.style.left = `${leftPercent}%`
   return tickDiv
 }
