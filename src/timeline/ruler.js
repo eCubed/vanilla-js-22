@@ -1,3 +1,5 @@
+import { clearChildrenOfElement } from '../utils/domutils.js'
+ 
 
 const calculateRulerMetrics = (widthPx, startMark, endMark, levels, minTickWidthPx) => {
   const accLevels = []
@@ -52,11 +54,14 @@ const determineLevelToUse = (tick, minLevel, levels) => {
 const renderRuler = (rulerDiv, widthPx, startMark, endMark, levels, minTickWidth) => {
   rulerDiv.style.width = `${widthPx || 500}px`
   const rulerMetrics = calculateRulerMetrics(widthPx || 500, startMark, endMark, levels, minTickWidth)
-  // console.log(JSON.stringify(rulerMetrics))
-  for (let i = 0; i < rulerMetrics.totalNumTicks; i++) {
-    // First let's render the ticks.
-    let levelToUse = determineLevelToUse(i, rulerMetrics.minLevel, levels)
-    
+  
+  console.log(JSON.stringify(rulerMetrics))
+
+  // clear the ruler!!!
+  clearChildrenOfElement(rulerDiv)
+
+  for (let i = 0; i < rulerMetrics.totalNumTicks; i++) {    
+    let levelToUse = determineLevelToUse(i, rulerMetrics.minLevel, levels)    
     const tickDiv = renderTickDiv(i * rulerMetrics.tickWidthPercent, levelToUse)
     rulerDiv.appendChild(tickDiv);
   }
@@ -66,4 +71,11 @@ export const setupRuler = (rulerId, initialWidthPx, startMark, endMark, levels) 
   const rulerDiv = document.getElementById(rulerId)
   renderRuler(rulerDiv, initialWidthPx, startMark || 0, endMark || 3, levels || [1, 2, 2, 3], 10)
 
+  const setRulerWidthPx = (newWidthPx) => {
+    renderRuler(rulerDiv, newWidthPx, startMark || 0, endMark || 3, levels || [1, 2, 2, 3], 10)
+  }
+
+  return {
+    setRulerWidthPx
+  }
 }
