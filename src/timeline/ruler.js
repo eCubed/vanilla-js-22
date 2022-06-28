@@ -1,16 +1,17 @@
 import { clearChildrenOfElement } from '../utils/domutils.js'
  
 
-const calculateRulerMetrics = (widthPx, startMark, endMark, levels, minTickWidthPx) => {
+const calculateRulerMetrics = (initialWidthPerUnitPx, scaleFactor, startMark, endMark, levels, minTickWidthPx) => {
   const accLevels = []
   accLevels.push(levels[0])
   
   for (let i = 1; i < levels.length; i++) {
     accLevels.push(accLevels[i - 1] * levels[i])
   }
-
-  let currentLevel = levels.length - 1
+  
   const intervalLength = Math.abs(endMark - startMark)
+  const widthPx = initialWidthPerUnitPx * intervalLength * scaleFactor
+  let currentLevel = levels.length - 1
   let tickWidthPx = widthPx / (intervalLength *  accLevels[currentLevel])
   
   while (tickWidthPx < minTickWidthPx) {
@@ -24,7 +25,8 @@ const calculateRulerMetrics = (widthPx, startMark, endMark, levels, minTickWidth
     minLevel: currentLevel,
     numTicksPerUnit: accLevels[currentLevel],
     totalNumTicks: accLevels[currentLevel] * intervalLength,
-    intervalLength
+    intervalLength,
+    totalWidthPx: widthPx
   }
 }
 
@@ -51,10 +53,11 @@ const determineLevelToUse = (tick, minLevel, levels) => {
   return currLevel
 }
 
-const renderRuler = (rulerDiv, widthPx, startMark, endMark, levels, minTickWidth) => {
-  rulerDiv.style.width = `${widthPx || 500}px`
-  const rulerMetrics = calculateRulerMetrics(widthPx || 500, startMark, endMark, levels, minTickWidth)
+const renderRuler = (rulerDiv, initialWidthPerUnitPx, scaleFactor, startMark, endMark, levels, minTickWidth) => {
   
+  const rulerMetrics = calculateRulerMetrics(initialWidthPerUnitPx || 100, scaleFactor || 1, startMark, endMark, levels, minTickWidth)
+  rulerDiv.style.width = `${rulerMetrics.totalWidthPx}px`
+  console.log(`@renderRuler: ${rulerMetrics.totalWidthPx}`)
   // clear the ruler!!!
   clearChildrenOfElement(rulerDiv)
 
@@ -65,15 +68,15 @@ const renderRuler = (rulerDiv, widthPx, startMark, endMark, levels, minTickWidth
   }
 }
 
-export const setupRuler = (rulerId, initialWidthPx, startMark, endMark, levels) => {
+export const setupRuler = (rulerId, initialWidthPerUnitPx, startMark, endMark, levels) => {
   const rulerDiv = document.getElementById(rulerId)
-  renderRuler(rulerDiv, initialWidthPx, startMark || 0, endMark || 3, levels || [1, 2, 2, 3], 10)
+  renderRuler(rulerDiv, initialWidthPerUnitPx, 1, startMark || 0, endMark || 3, levels || [1, 2, 2, 3], 10)
 
-  const setRulerWidthPx = (newWidthPx) => {
-    renderRuler(rulerDiv, newWidthPx, startMark || 0, endMark || 3, levels || [1, 2, 2, 3], 10)
+  const scaleRuler = (scaleFactor) => {
+    renderRuler(rulerDiv, initialWidthPerUnitPx, scaleFactor, startMark || 0, endMark || 3, levels || [1, 2, 2, 3], 10)
   }
 
   return {
-    setRulerWidthPx
+    scaleRuler
   }
 }

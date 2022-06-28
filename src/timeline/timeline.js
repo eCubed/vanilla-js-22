@@ -1,12 +1,11 @@
 import { setupRuler } from './ruler.js'
 import { setupScaler } from './scaler.js'
 
-const setTrackWidths = (widthPx) => {
+const setWidthStyleToAllTracks = (widthStyle) => {
   const trackDivs = document.querySelectorAll('.track')
   trackDivs.forEach(trackDiv => {
-    trackDiv.style.width = `${widthPx}px`
+    trackDiv.style.width = `${widthStyle}`
   })
-  console.log(`setTrackWidth: ${trackDivs.length}`)
 }
 
 export const setupTimeline = (timelineId) => {
@@ -36,20 +35,20 @@ export const setupTimeline = (timelineId) => {
   scalerDiv.appendChild(scalerDisplaySpan)
   
 
-  const { setRulerWidthPx } = setupRuler('ruler')
+  const { scaleRuler } = setupRuler('ruler')
   const { onScaleFactorChanged } = setupScaler('slider', 50, 3)
 
   onScaleFactorChanged((scaleFactor) => {
     scalerDisplaySpan.innerText = `${Math.round(scaleFactor * 10) / 10}x`
-    setRulerWidthPx(500 * scaleFactor)
-    setTrackWidths(500 * scaleFactor)
+    scaleRuler(scaleFactor)
+    setWidthStyleToAllTracks(rulerDiv.style.width)
   })
   
 
   const addTrack = () => {
     const trackDiv = document.createElement('div')
     trackDiv.setAttribute('class', 'track')
-    trackDiv.style.width = `500px`
+    trackDiv.style.width = rulerDiv.style.width;
     timelineTracksDiv.appendChild(trackDiv)
   }
 
