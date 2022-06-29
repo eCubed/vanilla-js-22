@@ -8,7 +8,19 @@ const setWidthStyleToAllTracks = (widthStyle) => {
   })
 }
 
-export const setupTimeline = (timelineId) => {
+const resolveTimelineConfig = (timelineConfig) => {
+  return {
+    sliderResolution: timelineConfig?.sliderResolution ?? 51,
+    scaleMax: timelineConfig?.scaleMax ?? 3,
+    rulerLevels: timelineConfig?.rulerLevels ?? [1,2,5,2],
+    startMark: timelineConfig?.startMark ?? 0,
+    endMark: timelineConfig?.endMark ?? 5
+  }
+}
+
+export const setupTimeline = (timelineId, timelineConfig) => {
+
+  const _timelineConfig = resolveTimelineConfig(timelineConfig)
 
   const timelineDiv = document.getElementById(timelineId)
   const timelineTracksDiv = document.createElement('div')
@@ -26,17 +38,20 @@ export const setupTimeline = (timelineId) => {
   scalerInput.setAttribute('id', 'slider')
   scalerInput.setAttribute('type', 'range')
   scalerInput.setAttribute('min', 1)
-  scalerInput.setAttribute('max', 51)
-  scalerInput.setAttribute('value', 26)
+  scalerInput.setAttribute('max', _timelineConfig.sliderResolution)
+  scalerInput.setAttribute('value', (_timelineConfig.sliderResolution + 1)/2)
   scalerDiv.appendChild(scalerInput)
 
   const scalerDisplaySpan = document.createElement('span')
   scalerDisplaySpan.setAttribute('id', 'scaler-display')
+  scalerDisplaySpan.innerText = '1x'
   scalerDiv.appendChild(scalerDisplaySpan)
   
-
-  const { scaleRuler } = setupRuler('ruler')
-  const { onScaleFactorChanged } = setupScaler('slider', 50, 3)
+  // stretch
+  const initialWidthPerUnitPx = timelineDiv.getBoundingClientRect().width / (_timelineConfig.endMark - _timelineConfig.startMark)
+  
+  const { scaleRuler } = setupRuler('ruler', initialWidthPerUnitPx, _timelineConfig.startMark, _timelineConfig.endMark, _timelineConfig.rulerLevels)
+  const { onScaleFactorChanged } = setupScaler('slider', _timelineConfig.sliderResolution, _timelineConfig.scaleMax)
 
   onScaleFactorChanged((scaleFactor) => {
     scalerDisplaySpan.innerText = `${Math.round(scaleFactor * 10) / 10}x`
