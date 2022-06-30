@@ -53,11 +53,10 @@ const determineLevelToUse = (tick, minLevel, levels) => {
   return currLevel
 }
 
-const renderRuler = (rulerDiv, initialWidthPerUnitPx, scaleFactor, startMark, endMark, levels, minTickWidth) => {
+const renderRuler = (rulerDiv, initialWidthPerUnitPx, scaleFactor, startMark, endMark, levels, minTickWidth, formatLabel) => {
   
   const rulerMetrics = calculateRulerMetrics(initialWidthPerUnitPx || 100, scaleFactor || 1, startMark, endMark, levels, minTickWidth)
   rulerDiv.style.width = `${rulerMetrics.totalWidthPx}px`
-  console.log(`@renderRuler: ${rulerMetrics.totalWidthPx}`)
   // clear the ruler!!!
   clearChildrenOfElement(rulerDiv)
 
@@ -65,15 +64,27 @@ const renderRuler = (rulerDiv, initialWidthPerUnitPx, scaleFactor, startMark, en
     let levelToUse = determineLevelToUse(i, rulerMetrics.minLevel, levels)    
     const tickDiv = renderTickDiv(i * rulerMetrics.tickWidthPercent, levelToUse)
     rulerDiv.appendChild(tickDiv);
+
+    if (levelToUse === 0) {
+      console.log(`I: ${i} `)
+      const labelDiv = document.createElement('div')
+      labelDiv.style.position = 'absolute'
+      labelDiv.style.top = '20px'
+      labelDiv.style.left = `${i * rulerMetrics.tickWidthPx + 3}px`
+      console.log(`labelDiv left: ${labelDiv.style.left}`)
+      labelDiv.innerHTML = formatLabel(i / rulerMetrics.numTicksPerUnit, 0)
+      rulerDiv.appendChild(labelDiv)
+    }
+
   }
 }
 
-export const setupRuler = (rulerId, initialWidthPerUnitPx, startMark, endMark, levels) => {
+export const setupRuler = (rulerId, initialWidthPerUnitPx, startMark, endMark, levels, formatLabel) => {
   const rulerDiv = document.getElementById(rulerId)
-  renderRuler(rulerDiv, initialWidthPerUnitPx, 1, startMark || 0, endMark || 3, levels || [1, 2, 2, 3], 10)
+  renderRuler(rulerDiv, initialWidthPerUnitPx, 1, startMark || 0, endMark || 3, levels || [1, 2, 2, 3], 10, formatLabel)
 
   const scaleRuler = (scaleFactor) => {
-    renderRuler(rulerDiv, initialWidthPerUnitPx, scaleFactor, startMark || 0, endMark || 3, levels || [1, 2, 2, 3], 10)
+    renderRuler(rulerDiv, initialWidthPerUnitPx, scaleFactor, startMark || 0, endMark || 3, levels || [1, 2, 2, 3], 10, formatLabel)
   }
 
   return {

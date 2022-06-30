@@ -14,7 +14,8 @@ const resolveTimelineConfig = (timelineConfig) => {
     scaleMax: timelineConfig?.scaleMax ?? 3,
     rulerLevels: timelineConfig?.rulerLevels ?? [1,2,5,2],
     startMark: timelineConfig?.startMark ?? 0,
-    endMark: timelineConfig?.endMark ?? 5
+    endMark: timelineConfig?.endMark ?? 5,
+    formatLabel: timelineConfig?.formatLabel ?? ((value, level) => level === 0 ? value.toFixed(2).toString() : '')
   }
 }
 
@@ -50,7 +51,7 @@ export const setupTimeline = (timelineId, timelineConfig) => {
   // stretch
   const initialWidthPerUnitPx = timelineDiv.getBoundingClientRect().width / (_timelineConfig.endMark - _timelineConfig.startMark)
   
-  const { scaleRuler } = setupRuler('ruler', initialWidthPerUnitPx, _timelineConfig.startMark, _timelineConfig.endMark, _timelineConfig.rulerLevels)
+  const { scaleRuler } = setupRuler('ruler', initialWidthPerUnitPx, _timelineConfig.startMark, _timelineConfig.endMark, _timelineConfig.rulerLevels, _timelineConfig.formatLabel)
   const { onScaleFactorChanged } = setupScaler('slider', _timelineConfig.sliderResolution, _timelineConfig.scaleMax)
 
   onScaleFactorChanged((scaleFactor) => {
