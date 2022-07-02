@@ -8,14 +8,15 @@ const setWidthStyleToAllTracks = (widthStyle) => {
   })
 }
 
+
 const resolveTimelineConfig = (timelineConfig) => {
   return {
     sliderResolution: timelineConfig?.sliderResolution ?? 51,
     scaleMax: timelineConfig?.scaleMax ?? 3,
-    rulerLevels: timelineConfig?.rulerLevels ?? [1,2,5,2],
+    rulerLevels: timelineConfig?.rulerLevels ?? [1,2,2,3],
     startMark: timelineConfig?.startMark ?? 0,
     endMark: timelineConfig?.endMark ?? 5,
-    formatLabel: timelineConfig?.formatLabel ?? ((value, level) => level === 0 ? value.toFixed(2).toString() : '')
+    formatLabel: timelineConfig?.formatLabel
   }
 }
 

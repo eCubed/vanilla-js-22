@@ -53,8 +53,25 @@ const determineLevelToUse = (tick, minLevel, levels) => {
   return currLevel
 }
 
+
+const _formatLabel = (value, level) => {
+  console.log(`LEVEL .. ${level}`)
+  if (level == 0) {
+    return `${value}:00`
+  } else if (level == 1) {    
+    return `${Math.floor(value)}:30`
+  } else if (level == 2) {
+    const wholePortion = Math.floor(value)
+    const decimalPortion = value - wholePortion
+    const minutes = Math.floor(decimalPortion * 60)
+    return `${wholePortion}:${minutes}`
+  } else {
+    return ''
+  }
+}
+
 const renderRuler = (rulerDiv, initialWidthPerUnitPx, scaleFactor, startMark, endMark, levels, minTickWidth, formatLabel) => {
-  
+  formatLabel = formatLabel ?? _formatLabel
   const rulerMetrics = calculateRulerMetrics(initialWidthPerUnitPx || 100, scaleFactor || 1, startMark, endMark, levels, minTickWidth)
   rulerDiv.style.width = `${rulerMetrics.totalWidthPx}px`
   // clear the ruler!!!
@@ -65,18 +82,39 @@ const renderRuler = (rulerDiv, initialWidthPerUnitPx, scaleFactor, startMark, en
     const tickDiv = renderTickDiv(i * rulerMetrics.tickWidthPercent, levelToUse)
     rulerDiv.appendChild(tickDiv);
 
-    if (levelToUse === 0) {
-      console.log(`I: ${i} `)
-      const labelDiv = document.createElement('div')
-      labelDiv.style.position = 'absolute'
-      labelDiv.style.top = '20px'
-      labelDiv.style.left = `${i * rulerMetrics.tickWidthPx + 3}px`
-      console.log(`labelDiv left: ${labelDiv.style.left}`)
-      labelDiv.innerHTML = formatLabel(i / rulerMetrics.numTicksPerUnit, 0)
-      rulerDiv.appendChild(labelDiv)
-    }
+    const labelDiv = document.createElement('div')
+    labelDiv.setAttribute('class', 'label')
+    labelDiv.style.position = 'absolute'
+    labelDiv.style.top = '20px'      
+    labelDiv.style.left = `${i * rulerMetrics.tickWidthPx + ((levelToUse === 0) ? 3 : -1)}px`
+    labelDiv.innerHTML = formatLabel(i / rulerMetrics.numTicksPerUnit, levelToUse)
+    
+    rulerDiv.appendChild(labelDiv)
+    
+    
+    const labelDivWidthPx = labelDiv.getBoundingClientRect().width
 
+    if (labelDivWidthPx === 0) {
+      rulerDiv.removeChild(labelDiv)
+    }
   }
+
+  // Now, we need to remove the labelDivs whose left coordinate is less than the previous's left
+  // coordinate + width. 
+  const labelDivs = Array.from(rulerDiv.querySelectorAll('div.label'))
+  labelDivs.forEach(labelDiv => {
+    console.log(`Queried labelDiv: ${labelDiv.style.width}`)
+  })
+  console.log(`Label Divs length: ${labelDivs.length}`)
+  const overlappingLabelDivs = labelDivs.filter((labelDiv, index) => {
+    // pick only the elements whose left index is less than the previous label's left + width
+    return index > 0 &&
+    parseInt(labelDiv.style.left) < parseInt(labelDivs[index - 1].style.left) + labelDivs[index - 1].getBoundingClientRect().width + 10
+  })
+  console.log(`overlapping label divs: ${overlappingLabelDivs.length}`)
+  overlappingLabelDivs.forEach(overlappingLabelDiv => {
+    rulerDiv.removeChild(overlappingLabelDiv)
+  })
 }
 
 export const setupRuler = (rulerId, initialWidthPerUnitPx, startMark, endMark, levels, formatLabel) => {
