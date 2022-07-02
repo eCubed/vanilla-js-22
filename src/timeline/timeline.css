@@ -23,3 +23,15 @@
   background-color: #aaaaff;
   height: 80px;
 }
+
+.clip {
+  position: absolute;
+  height: 80px;
+  box-sizing: border-box;
+  background-color: #ccccff;
+  border: solid 1px #8888ff;
+}
+
+.clip.selected {
+  background-color: #bbbbff;
+}

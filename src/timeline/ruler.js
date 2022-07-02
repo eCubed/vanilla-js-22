@@ -55,7 +55,6 @@ const determineLevelToUse = (tick, minLevel, levels) => {
 
 
 const _formatLabel = (value, level) => {
-  console.log(`LEVEL .. ${level}`)
   if (level == 0) {
     return `${value}:00`
   } else if (level == 1) {    
@@ -101,6 +100,7 @@ const renderRuler = (rulerDiv, initialWidthPerUnitPx, scaleFactor, startMark, en
 
   // Now, we need to remove the labelDivs whose left coordinate is less than the previous's left
   // coordinate + width. 
+  /*
   const labelDivs = Array.from(rulerDiv.querySelectorAll('div.label'))
   labelDivs.forEach(labelDiv => {
     console.log(`Queried labelDiv: ${labelDiv.style.width}`)
@@ -115,6 +115,7 @@ const renderRuler = (rulerDiv, initialWidthPerUnitPx, scaleFactor, startMark, en
   overlappingLabelDivs.forEach(overlappingLabelDiv => {
     rulerDiv.removeChild(overlappingLabelDiv)
   })
+  */
 }
 
 export const setupRuler = (rulerId, initialWidthPerUnitPx, startMark, endMark, levels, formatLabel) => {

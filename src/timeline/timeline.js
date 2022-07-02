@@ -22,6 +22,7 @@ const resolveTimelineConfig = (timelineConfig) => {
 
 export const setupTimeline = (timelineId, timelineConfig) => {
 
+  let _clipSelected = null
   const _timelineConfig = resolveTimelineConfig(timelineConfig)
 
   const timelineDiv = document.getElementById(timelineId)
@@ -62,15 +63,60 @@ export const setupTimeline = (timelineId, timelineConfig) => {
   })
   
 
-  const addTrack = () => {
-    const trackDiv = document.createElement('div')
-    trackDiv.setAttribute('class', 'track')
-    trackDiv.style.width = rulerDiv.style.width;
-    timelineTracksDiv.appendChild(trackDiv)
+  const addTrack = (trackId) => {
+
+    const trackDivByTrackId = timelineTracksDiv.querySelector(`#${trackId}`)
+    if (trackDivByTrackId == null) {      
+      const trackDiv = document.createElement('div')
+      trackDiv.setAttribute('class', 'track')
+      trackDiv.setAttribute('id', trackId)
+      trackDiv.style.width = rulerDiv.style.width;
+      timelineTracksDiv.appendChild(trackDiv)
+    }
+  }
+
+  const createAndPositionClipDiv = (trackDiv, startMark, duration, id, data) => {
+    const clipDiv = document.createElement('div')
+    const entireTrackDuration = _timelineConfig.endMark - _timelineConfig.startMark
+    clipDiv.style.left = `${startMark/entireTrackDuration * 100}%`
+    clipDiv.style.width = `${duration/entireTrackDuration * 100}%`
+    clipDiv.setAttribute('data', data)
+    clipDiv.setAttribute('id', id)
+    clipDiv.setAttribute('class', 'clip')
+    clipDiv.addEventListener('click', () => {
+      if (!clipDiv.classList.contains('selected')) {
+        clipDiv.classList.add('selected')
+      }
+      
+      if (_clipSelected != null) {
+        _clipSelected({
+          trackId: trackDiv.getAttribute('id'),
+          id,
+          data
+        })
+      }
+
+      // Deselect clipDivs that are NOT it
+      Array.from(trackDiv.querySelectorAll(`.clip`)).filter(cd => cd.getAttribute('id') !== id).forEach(cd => {
+        if (cd.classList.contains('selected')) {
+          cd.classList.remove('selected')
+        }
+      })
+    })
+    trackDiv.appendChild(clipDiv)
+  }
+
+  const addClip = (trackId, startMark, duration, id, data) => {
+    const trackDivByTrackId = timelineTracksDiv.querySelector(`#${trackId}`)
+    if (trackDivByTrackId != null) {      
+      createAndPositionClipDiv(trackDivByTrackId,startMark, duration, id, data)
+    }
   }
 
   return {
-    addTrack
+    addTrack,
+    addClip,
+    clipSelected: ((clipSelected) => _clipSelected = clipSelected)
   }
 
 }

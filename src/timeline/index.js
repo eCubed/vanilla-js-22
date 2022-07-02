@@ -1,8 +1,15 @@
 
 import { setupTimeline } from './timeline.js'
 
-const { addTrack } = setupTimeline('timeline')
-addTrack()
+const { addTrack, addClip, clipSelected } = setupTimeline('timeline')
+addTrack('a')
+addTrack('b')
+addClip('a', 0.25, 1, 'a-1', {})
+addClip('a', 1, 1, 'a-2', {})
+
+clipSelected(({id, trackId}) => {
+  console.log(`The clip selected was ${id} from track ${trackId}`)
+})
 
 /*
 const { setRulerWidthPx } = setupRuler('ruler')
